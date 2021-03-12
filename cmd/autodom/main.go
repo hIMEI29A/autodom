@@ -1,6 +1,8 @@
 package main
 
 import (
+	"autodom/env"
+	"autodom/model"
 	"database/sql"
 	"encoding/json"
 	"flag"
@@ -15,27 +17,12 @@ import (
 
 //https://reqbin.com/
 
-func getSelectQuery(text string) string {
-	return fmt.Sprintf(`
-		SELECT * FROM cases WHERE MATCH (title) AGAINST 
-		('%s' IN NATURAL LANGUAGE MODE);
-		`,
-		text,
-	)
-}
-
 var (
 	userFlag     = flag.String("u", "", "DB user")
 	passFlag     = flag.String("p", "", "DB password")
 	dbNameFlag   = flag.String("d", "", "DB name")
 	httpAddrFlag = flag.String("http.addr", ":8080", "HTTP listen address")
 )
-
-type Entity struct {
-	Category    string `json:"category"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-}
 
 type Request struct {
 	SearchText  string `json:"searchText"`
@@ -77,7 +64,7 @@ func (e *Env) ProblemsHandler(w http.ResponseWriter, r *http.Request) {
 	res := QueryDB(e.DB, text, count)
 
 	if res == nil {
-		res = append(res, Entity{Category: "Common", Title: "Unknown problem", Description: "solutions not found"})
+		res = append(res, model.Entity{Category: "Common", Title: "Unknown problem", Description: "solutions not found"})
 	}
 
 	//entity := Entity{Category: "hardware", Title: "some problem", Description: "some text"}
@@ -97,9 +84,9 @@ func (e *Env) ProblemsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func QueryDB(db *sql.DB, text string, num int) []Entity {
+func QueryDB(db *sql.DB, text string, num int) []model.Entity {
 	query := getSelectQuery(text)
-	rows, err := db.Query(query)
+	rows, err := db.Query("SELECT * FROM cases WHERE MATCH (title) AGAINST (? IN NATURAL LANGUAGE MODE) LIMIT ?", text, num)
 
 	if err != nil {
 		panic(err)
@@ -107,10 +94,10 @@ func QueryDB(db *sql.DB, text string, num int) []Entity {
 
 	defer rows.Close()
 
-	entities := []Entity{}
+	entities := []model.Entity{}
 
 	for rows.Next() {
-		e := Entity{}
+		e := model.Entity{}
 		err := rows.Scan(&e.Category, &e.Title, &e.Description)
 
 		if err != nil {
