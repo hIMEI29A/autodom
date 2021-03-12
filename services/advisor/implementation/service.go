@@ -32,7 +32,7 @@ func (s *service) GetByTitle(ctx context.Context, title string, number int) ([]a
 		level.Error(logger).Log("err", err)
 
 		if err == sql.ErrNoRows {
-			return solutions, advisor.ErrOrderNotFound
+			return solutions, advisor.ErrSolutionNotFound
 		}
 
 		return solutions, advisor.ErrQueryRepository
