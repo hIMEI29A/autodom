@@ -62,6 +62,7 @@ func main() {
 	{
 		var err error
 		credits := fmt.Sprintf("%s:%s@/%s", *userFlag, *passFlag, *dbNameFlag)
+		fmt.Println("CREDITS", credits)
 
 		db, err = sql.Open("mysql", credits)
 		if err != nil {

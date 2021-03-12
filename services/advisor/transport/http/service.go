@@ -32,7 +32,7 @@ func NewService(
 
 	r.Methods("POST").Path("/solutions").Handler(kithttp.NewServer(
 		svcEndpoints.GetByTitle,
-		decodeGetByIDRequest,
+		decodeGetByTitleRequest,
 		encodeResponse,
 		options...,
 	))
@@ -40,7 +40,7 @@ func NewService(
 	return r
 }
 
-func decodeGetByIDRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+func decodeGetByTitleRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
 	text, count := decodeIncomingRequest(r)
 
 	return transport.GetByTitleRequest{Title: text, Number: count}, nil
@@ -77,7 +77,7 @@ func encodeErrorResponse(_ context.Context, err error, w http.ResponseWriter) {
 
 func codeFrom(err error) int {
 	switch err {
-	case advisor.ErrOrderNotFound:
+	case advisor.ErrSolutionNotFound:
 		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
