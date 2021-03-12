@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,6 +43,7 @@ func NewService(
 
 func decodeGetByIDRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
 	vars := mux.Vars(r)
+	fmt.Println("VARS", vars)
 	title, ok := vars["searchText"]
 
 	if !ok {
