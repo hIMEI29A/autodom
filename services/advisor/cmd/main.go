@@ -27,7 +27,7 @@ var (
 	userFlag     = flag.String("u", "", "DB user")
 	passFlag     = flag.String("p", "", "DB password")
 	dbNameFlag   = flag.String("d", "", "DB name")
-	httpAddrFlag = flag.String("http.addr", ":8080", "HTTP listen address")
+	httpAddrFlag = flag.String("a", ":8080", "HTTP listen address")
 )
 
 func main() {
@@ -62,7 +62,6 @@ func main() {
 	{
 		var err error
 		credits := fmt.Sprintf("%s:%s@/%s", *userFlag, *passFlag, *dbNameFlag)
-		fmt.Println("CREDITS", credits)
 
 		db, err = sql.Open("mysql", credits)
 		if err != nil {

@@ -22,7 +22,6 @@ type repository struct {
 }
 
 func New(db *sql.DB, logger log.Logger) (advisor.Repository, error) {
-	// return  repository
 	return &repository{
 		db:     db,
 		logger: log.With(logger, "rep", "sqldb"),

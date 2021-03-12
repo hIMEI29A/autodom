@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	//"time"
-
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 
