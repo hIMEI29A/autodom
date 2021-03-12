@@ -21,6 +21,7 @@ type repository struct {
 	logger log.Logger
 }
 
+// New returns a concrete repository backed by MySQL
 func New(db *sql.DB, logger log.Logger) (advisor.Repository, error) {
 	return &repository{
 		db:     db,
@@ -28,6 +29,9 @@ func New(db *sql.DB, logger log.Logger) (advisor.Repository, error) {
 	}, nil
 }
 
+// GetSolutionsByTitle creates full test search request to BD. First argument is a
+// problem's title to search, second is a wanted number of results.
+// Returns slice of advisor.Solution and error/
 func (repo *repository) GetSolutionsByTitle(ctx context.Context, title string, num int) ([]advisor.Solution, error) {
 	rows, err := repo.db.Query("SELECT * FROM cases WHERE MATCH (title) AGAINST (? IN NATURAL LANGUAGE MODE) LIMIT ?", title, num)
 
@@ -55,6 +59,7 @@ func (repo *repository) GetSolutionsByTitle(ctx context.Context, title string, n
 	return entities, err
 }
 
+// Close closes db connection.
 func (repo *repository) Close() error {
 	return repo.db.Close()
 }

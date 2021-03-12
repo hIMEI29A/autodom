@@ -10,11 +10,13 @@ import (
 	"autodom/services/advisor"
 )
 
+// service implements the advisor Service interface
 type service struct {
 	repository advisor.Repository
 	logger     log.Logger
 }
 
+// NewService creates and returns a new advisor service instance
 func NewService(rep advisor.Repository, logger log.Logger) advisor.Service {
 	return &service{
 		repository: rep,
@@ -22,6 +24,7 @@ func NewService(rep advisor.Repository, logger log.Logger) advisor.Service {
 	}
 }
 
+// GetByTitle returns slice of advisor.Solution and error.
 func (s *service) GetByTitle(ctx context.Context, title string, number int) ([]advisor.Solution, error) {
 	logger := log.With(s.logger, "method", "GetByTitle")
 	solutions, err := s.repository.GetSolutionsByTitle(ctx, title, number)

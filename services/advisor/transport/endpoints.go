@@ -8,10 +8,12 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
+// Endpoints stores Go kit endpoints for the advisor service.
 type Endpoints struct {
 	GetByTitle endpoint.Endpoint
 }
 
+// MakeEndpoints initializes Go kit endpoints for the advisor service.
 func MakeEndpoints(s advisor.Service) Endpoints {
 	return Endpoints{
 		GetByTitle: makeGetByTitleEndpoint(s),

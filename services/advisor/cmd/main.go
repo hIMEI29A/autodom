@@ -70,6 +70,7 @@ func main() {
 		}
 	}
 
+	// Create advisor Service
 	var svc advisor.Service
 	{
 		repository, err := sqldb.New(db, logger)
@@ -78,18 +79,20 @@ func main() {
 			os.Exit(-1)
 		}
 		svc = impl.NewService(repository, logger)
-
+		// Logging middleware
 		svc = middleware.LoggingMiddleware(logger)(svc)
 	}
 
 	var h http.Handler
 	{
+		// Create Go kit endpoints for the Order Service
 		endpoints := transport.MakeEndpoints(svc)
 		serverOptions := []kithttp.ServerOption{}
 		h = httptransport.NewService(endpoints, serverOptions, logger)
 	}
 
 	errs := make(chan error)
+	// graceful shutdown
 	go func() {
 		c := make(chan os.Signal)
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)

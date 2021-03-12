@@ -1,3 +1,3 @@
 # autodom
 
-Тестовое задание
+Simple test app with `go-kit` and microservice architecture.

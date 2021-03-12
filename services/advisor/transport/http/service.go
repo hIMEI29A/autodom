@@ -19,10 +19,11 @@ var (
 	ErrBadRouting = errors.New("bad routing")
 )
 
+// NewService maps Go kit endpoints to the HTTP transport.
 func NewService(
 	svcEndpoints transport.Endpoints, options []kithttp.ServerOption, logger log.Logger,
 ) http.Handler {
-
+	// set-up gorilla/mux router and initialize http endpoints
 	var (
 		r            = mux.NewRouter()
 		errorLogger  = kithttp.ServerErrorLogger(logger)
@@ -30,6 +31,7 @@ func NewService(
 	)
 	options = append(options, errorLogger, errorEncoder)
 
+	// HTTP Post - /solutions
 	r.Methods("POST").Path("/solutions").Handler(kithttp.NewServer(
 		svcEndpoints.GetByTitle,
 		decodeGetByTitleRequest,
@@ -89,6 +91,7 @@ type incomingRequest struct {
 	AnswerCount int    `json:"answerCount"`
 }
 
+// decodeIncomingRequest decodes jsoned *http.Request body
 func decodeIncomingRequest(r *http.Request) (string, int) {
 	defer r.Body.Close()
 	var ir incomingRequest

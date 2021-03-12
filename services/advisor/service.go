@@ -11,6 +11,7 @@ var (
 	ErrQueryRepository  = errors.New("unable to query repository")
 )
 
+// Service describes the Advisor service.
 type Service interface {
 	GetByTitle(ctx context.Context, title string, number int) ([]Solution, error)
 }

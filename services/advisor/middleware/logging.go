@@ -9,6 +9,7 @@ import (
 	"autodom/services/advisor"
 )
 
+// LoggingMiddleware describes a logging middleware.
 func LoggingMiddleware(logger log.Logger) Middleware {
 	return func(next advisor.Service) advisor.Service {
 		return &loggingMiddleware{
