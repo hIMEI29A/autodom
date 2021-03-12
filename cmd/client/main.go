@@ -11,6 +11,7 @@ import (
 
 var (
 	searchTextFlag = flag.String("t", "no sound", "Text to search")
+	urlFlag        = flag.String("u", "http://localhost:8080", "Text to search")
 	countFlag      = flag.Int("c", 1, "Number of results")
 )
 
@@ -22,7 +23,6 @@ type Obj struct {
 func main() {
 	flag.Parse()
 
-	url := "http://localhost:8080"
 	client := &http.Client{}
 
 	obj := Obj{SearchText: *searchTextFlag, AnswerCount: *countFlag}
@@ -32,10 +32,16 @@ func main() {
 		panic(err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", *urlFlag, bytes.NewBuffer(jsonStr))
+
+	if err != nil {
+		panic(err)
+	}
+
 	req.Header.Set("Content-Type", "text/html")
 
 	resp, err := client.Do(req)
+
 	if err != nil {
 		panic(err)
 	}

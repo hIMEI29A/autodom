@@ -161,6 +161,6 @@ func main() {
 
 	http.HandleFunc("/", env.ProblemsHandler)
 	fmt.Println("Start...")
-	http.ListenAndServe(*httpAddrFlag, nil)
+	log.Fatal(http.ListenAndServe(*httpAddrFlag, nil))
 
 }

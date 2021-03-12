@@ -1,4 +1,5 @@
 cmd/dataloader/dataloader
 cmd/autodom/autodom
+cmd/client/client
 notes
 notes/*
