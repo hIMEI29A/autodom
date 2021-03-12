@@ -5,9 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
@@ -42,27 +41,9 @@ func NewService(
 }
 
 func decodeGetByIDRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
-	vars := mux.Vars(r)
-	fmt.Println("VARS", vars)
-	title, ok := vars["searchText"]
+	text, count := decodeIncomingRequest(r)
 
-	if !ok {
-		return nil, ErrBadRouting
-	}
-
-	number, ok := vars["answerCount"]
-
-	if !ok {
-		return nil, ErrBadRouting
-	}
-
-	var nn int
-
-	if n, err := strconv.Atoi(number); err == nil {
-		nn = n
-	}
-
-	return transport.GetByTitleRequest{Title: title, Number: nn}, nil
+	return transport.GetByTitleRequest{Title: text, Number: count}, nil
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
@@ -101,4 +82,31 @@ func codeFrom(err error) int {
 	default:
 		return http.StatusInternalServerError
 	}
+}
+
+type incomingRequest struct {
+	SearchText  string `json:"searchText"`
+	AnswerCount int    `json:"answerCount"`
+}
+
+func decodeIncomingRequest(r *http.Request) (string, int) {
+	defer r.Body.Close()
+	var ir incomingRequest
+
+	body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = json.Unmarshal(body, &ir)
+
+	if err != nil {
+		panic(err)
+	}
+
+	text := string(ir.SearchText)
+	count := ir.AnswerCount
+
+	return text, count
 }
