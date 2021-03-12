@@ -76,6 +76,10 @@ func (e *Env) ProblemsHandler(w http.ResponseWriter, r *http.Request) {
 
 	res := QueryDB(e.DB, text, count)
 
+	if res == nil {
+		res = append(res, Entity{Category: "Common", Title: "Unknown problem", Description: "solutions not found"})
+	}
+
 	//entity := Entity{Category: "hardware", Title: "some problem", Description: "some text"}
 
 	js, err := json.Marshal(res)
