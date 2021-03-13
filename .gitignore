@@ -3,3 +3,4 @@ cmd/autodom/autodom
 cmd/client/client
 notes
 notes/*
+.env
