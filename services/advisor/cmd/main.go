@@ -33,14 +33,16 @@ var (
 func main() {
 	flag.Parse()
 
-	if len(os.Args) == 1 {
-		flag.PrintDefaults()
-		os.Exit(1)
+	if *userFlag == "" {
+		*userFlag = os.Getenv("MYSQL_USER")
 	}
 
-	if *userFlag == "" || *passFlag == "" || *dbNameFlag == "" {
-		flag.PrintDefaults()
-		os.Exit(1)
+	if *passFlag == "" {
+		*passFlag = os.Getenv("MYSQL_PASSWORD")
+	}
+
+	if *dbNameFlag == "" {
+		*dbNameFlag = os.Getenv("MYSQL_DATABASE")
 	}
 
 	var logger log.Logger

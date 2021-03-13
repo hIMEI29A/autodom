@@ -1,0 +1,40 @@
+version: '3'
+services:
+  app:
+    container_name: advisor_app
+    build: .
+    ports: 
+      - 8080:8080 
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - autodom-mysql          
+    networks:
+      - autodom
+
+
+  autodom-mysql:
+    image: mysql:5.7
+    container_name: full_db_mysql
+    ports: 
+      - 2206:2206
+    environment: 
+      - MYSQL_ROOT_HOST=${DB_HOST} 
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - database_mysql:/var/lib/mysql
+    networks:
+      - autodom
+  
+volumes:
+  api:
+  database_mysql:                  
+
+# Networks to be created to facilitate communication between containers
+networks:
+  autodom:
+    driver: bridge
