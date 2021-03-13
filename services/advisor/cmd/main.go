@@ -85,7 +85,7 @@ func main() {
 
 	var h http.Handler
 	{
-		// Create Go kit endpoints for the Order Service
+		// Create Go kit endpoints for the advisor Service
 		endpoints := transport.MakeEndpoints(svc)
 		serverOptions := []kithttp.ServerOption{}
 		h = httptransport.NewService(endpoints, serverOptions, logger)
