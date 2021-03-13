@@ -11,7 +11,7 @@ type Solution struct {
 	Description string `json:"description"`
 }
 
-// Repository describes the persistence on order model
+// Repository describes the persistence on solution model
 type Repository interface {
 	GetSolutionsByTitle(ctx context.Context, title string, number int) ([]Solution, error)
 }
