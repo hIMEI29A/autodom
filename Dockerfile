@@ -21,7 +21,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo services/advisor/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build services/advisor/cmd/main.go
 
 # Start a new stage from scratch
 FROM alpine:latest
